@@ -183,7 +183,7 @@ MonoBehaviour:
   LocalizationEnable: 1
   callingLanguageCheck: 0
   translateMethod: 0
-  domainAutoLocalization: com
+  domainAutoLocalization: ru
   CSVFileTranslate:
     format: 0
     name: TranslateCSV
