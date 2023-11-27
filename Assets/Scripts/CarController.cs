@@ -1,84 +1,48 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class CarController : MonoBehaviour
+public class car_controller : MonoBehaviour
 {
-    private const string HORIZONTAL = "Horizontal";
-    private const string VERTICAL = "Vertical";
+    public WheelCollider[] wheel_col;
+    public Transform[] wheels;
+    [SerializeField] private float torque = 1000;
+    [SerializeField]  private float angle = 45;
 
-    private float horizontalInput;
-    private float verticalInput;
-    private float currentSteerAngle;
-    private float currentbreakForce;
-    private bool isBreaking;
-
-    [SerializeField] private float motorForce;
-    [SerializeField] private float breakForce;
-    [SerializeField] private float maxSteerAngle;
-
-    [SerializeField] private WheelCollider frontLeftWheelCollider;
-    [SerializeField] private WheelCollider frontRightWheelCollider;
-    [SerializeField] private WheelCollider backLeftWheelCollider;
-    [SerializeField] private WheelCollider backRightWheelCollider;
-
-    [SerializeField] private Transform frontLeftWheelTransform;
-    [SerializeField] private Transform frontRightWheelTransform;
-    [SerializeField] private Transform backLeftWheelTransform;
-    [SerializeField] private Transform backRightWheelTransform;
-
-    private void FixedUpdate()
+    void Update()
     {
-        GetInput();
-        HandleMotor();
-        HandleSteering();
-        UpdateWheels();
-    }
+        for (int i = 0; i < wheel_col.Length; i++)
+        {
+            wheel_col[i].motorTorque = Input.GetAxis("Vertical") * torque;
+            if (i == 0 || i == 2)
+            {
+                wheel_col[i].steerAngle = Input.GetAxis("Horizontal") * angle;
+            }
+            var pos = transform.position;
+            var rot = transform.rotation;
+            wheel_col[i].GetWorldPose(out pos, out rot);
+            wheels[i].position = pos;
+            wheels[i].rotation = rot;
 
-    private void GetInput()
-    {
-        horizontalInput = Input.GetAxis(HORIZONTAL);
-        verticalInput = Input.GetAxis(VERTICAL);
-        isBreaking = Input.GetKey(KeyCode.Space);
-    }
+        }
+        if (Input.anyKeyDown)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                foreach (var i in wheel_col)
+                {
+                    i.brakeTorque = 2000;
+                }
+            }
+            else
+            {   //reset the brake torque when another key is pressed
+                foreach (var i in wheel_col)
+                {
+                    i.brakeTorque = 0;
+                }
 
-    private void HandleMotor()
-    {
-        frontLeftWheelCollider.motorTorque = verticalInput * motorForce;
-        frontRightWheelCollider.motorTorque = verticalInput * motorForce;
-        currentbreakForce = isBreaking ? breakForce : 0f;
-        ApplyBreaking();
-    }
+            }
+        }
 
-    private void ApplyBreaking()
-    {
-        frontRightWheelCollider.brakeTorque = currentbreakForce;
-        frontLeftWheelCollider.brakeTorque = currentbreakForce;
-        backRightWheelCollider.brakeTorque = currentbreakForce;
-        backLeftWheelCollider.brakeTorque = currentbreakForce;
-    }
 
-    private void HandleSteering()
-    {
-        currentSteerAngle = maxSteerAngle * horizontalInput;
-        frontLeftWheelCollider.steerAngle = currentSteerAngle;
-        frontRightWheelCollider.steerAngle = currentSteerAngle;
-    }
 
-    private void UpdateWheels()
-    {
-        UpdateSingleWheel(frontLeftWheelCollider, frontLeftWheelTransform);
-        UpdateSingleWheel(frontRightWheelCollider, frontRightWheelTransform);
-        UpdateSingleWheel(backLeftWheelCollider, backLeftWheelTransform);
-        UpdateSingleWheel(backRightWheelCollider, backRightWheelTransform);
-    }
-
-    private void UpdateSingleWheel(WheelCollider wheelCollider, Transform wheelTransform)
-    {
-        Vector3 pos;
-        Quaternion rot;
-        wheelCollider.GetWorldPose(out pos, out rot);
-        wheelTransform.rotation = rot;
-        wheelTransform.position = pos;
     }
 }

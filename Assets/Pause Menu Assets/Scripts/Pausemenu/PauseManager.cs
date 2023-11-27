@@ -287,7 +287,6 @@ namespace GreatArcStudios
             allRes = Screen.resolutions;
             currentRes = Screen.currentResolution;
             //Debug.Log("ini res" + currentRes);
-            resolutionLabel.text = Screen.currentResolution.width.ToString() + " x " + Screen.currentResolution.height.ToString();
             isFullscreen = Screen.fullScreen;
             //get initial screen effect bools
             lastAOBool = aoToggle.isOn;

@@ -9,6 +9,7 @@ public class MenuManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
+            Time.timeScale = 1.0f;
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
