@@ -5,6 +5,9 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.IO;
 using UnityEngine.SceneManagement;
+using YG;
+using System.Threading.Tasks;
+using Unity.VisualScripting;
 //using UnityStandardAssets.ImageEffects;
 /// <summary>
 ///  Copyright (c) 2016 Eric Zhu 
@@ -55,7 +58,6 @@ namespace GreatArcStudios
         public Slider masterTexSlider;
         public Slider shadowCascadesSlider;
         public Toggle vSyncToggle;
-        public Toggle aoToggle;
         public Toggle dofToggle;
         public Toggle fullscreenToggle;
 
@@ -95,7 +97,8 @@ namespace GreatArcStudios
         //Camera dof script
         private MonoBehaviour tempScript;
         //Presets 
-        private String[] presets;
+        private String[] presets = { "Very Low", "Minimal", "Low", "Normal", "Very High", "Ultra", "Extreme" };
+        private String[] ruPresets = { "Очень низкое", "Минимальное", "Низкое", "Нормальное", "Очень высокое", "Ультра", "Экстрим" };
         //Fullscreen Boolean
         private Boolean isFullscreen;
         //current resoultion
@@ -112,9 +115,6 @@ namespace GreatArcStudios
         private Boolean lastDOFBool;
         public static Terrain readTerrain;
         public static Terrain readSimpleTerrain;
-
-        private SaveSettings saveSettings = new SaveSettings();
-
         public void Start()
         {
 
@@ -133,11 +133,8 @@ namespace GreatArcStudios
             allRes = Screen.resolutions;
             currentRes = Screen.currentResolution;
             //Debug.Log("ini res" + currentRes);
-            resolutionLabel.text = Screen.currentResolution.width.ToString() + " x " + Screen.currentResolution.height.ToString();
             isFullscreen = Screen.fullScreen;
             //get initial screen effect bools
-            lastAOBool = aoToggle.isOn;
-            lastDOFBool = dofToggle.isOn;
             //get all specified audio source volumes
             _beforeEffectVol = new float[_audioEffectAmt];
             beforeMaster = AudioListener.volume;
@@ -152,19 +149,16 @@ namespace GreatArcStudios
             TitleTexts.SetActive(true);
             //Find terrain
             terrain = Terrain.activeTerrain;
-            mask.SetActive(false);
             //set last texture limit
             lastTexLimit = QualitySettings.globalTextureMipmapLimit;
             //set last shadow cascade 
             lastShadowCascade = QualitySettings.shadowCascades;
-            saveSettings.LoadGameSettings(File.ReadAllText(Application.persistentDataPath + "/" + saveSettings.fileName));
-
         }
 
         public void Update()
         {
 
-            if (Input.GetKeyDown(KeyCode.Escape) && mainPanel.active == false)
+            if (Input.GetKeyDown(KeyCode.Escape) && !mainPanel.activeInHierarchy)
             {
 
                 uiEventSystem.SetSelectedGameObject(defualtSelectedMain);
@@ -307,7 +301,6 @@ namespace GreatArcStudios
             beforeMaster = AudioListener.volume;
             lastMusicMult = audioMusicSlider.value;
             lastAudioMult = audioEffectsSlider.value;
-            saveSettings.SaveGameSettings();
         }
         /// <summary>
         /// Cancel the audio setting changes
@@ -403,7 +396,6 @@ namespace GreatArcStudios
             masterTexSlider.value = QualitySettings.globalTextureMipmapLimit;
             shadowCascadesSlider.value = QualitySettings.shadowCascades;
             fullscreenToggle.isOn = Screen.fullScreen;
-            aoToggle.isOn = aoBool;
             dofToggle.isOn = dofBool;
             if (QualitySettings.vSyncCount == 0)
             {
@@ -514,7 +506,6 @@ namespace GreatArcStudios
             shadowDistINI = QualitySettings.shadowDistance;
             Debug.Log("Shadow dist ini" + shadowDistINI);
             fovINI = mainCam.fieldOfView;
-            aoBool = aoToggle.isOn;
             dofBool = dofToggle.isOn;
             lastAOBool = aoBool;
             lastDOFBool = dofBool;
@@ -537,7 +528,6 @@ namespace GreatArcStudios
                 }
             }
             catch { Debug.Log("Please assign a terrain"); }
-            saveSettings.SaveGameSettings();
 
         }
         /// <summary>

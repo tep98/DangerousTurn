@@ -233,8 +233,6 @@ namespace GreatArcStudios
         private Boolean lastDOFBool;
         public static Terrain readTerrain;
         public static Terrain readSimpleTerrain;
-
-        private SaveSettings saveSettings = new SaveSettings();
         /*
         //Color fade duration value
         //public float crossFadeDuration;
@@ -315,7 +313,6 @@ namespace GreatArcStudios
             lastTexLimit = QualitySettings.globalTextureMipmapLimit;
             //set last shadow cascade 
             lastShadowCascade = QualitySettings.shadowCascades;
-            saveSettings.LoadGameSettings(File.ReadAllText(Application.persistentDataPath + "/" + saveSettings.fileName));
             try
             {
                 densityINI = Terrain.activeTerrain.detailObjectDensity;
@@ -417,7 +414,7 @@ namespace GreatArcStudios
             readUseSimpleTerrain = useSimpleTerrain;
             useSimpleTerrain = readUseSimpleTerrain;
 
-            if (Input.GetKeyDown(KeyCode.Escape) && mainPanel.active == false)
+            if (Input.GetKeyDown(KeyCode.Escape) && !mainPanel.activeInHierarchy)
             {
 
                 uiEventSystem.SetSelectedGameObject(defualtSelectedMain);
@@ -436,7 +433,7 @@ namespace GreatArcStudios
                      blurEffect.enabled = true;
                  }  */
             }
-            else if(Input.GetKeyDown(KeyCode.Escape) && mainPanel.active == true) {
+            else if(Input.GetKeyDown(KeyCode.Escape) && mainPanel.activeInHierarchy) {
                 Time.timeScale = timeScale;
                 mainPanel.SetActive(false);
                 vidPanel.SetActive(false);
@@ -591,7 +588,6 @@ namespace GreatArcStudios
             beforeMaster = AudioListener.volume;
             lastMusicMult = audioMusicSlider.value;
             lastAudioMult = audioEffectsSlider.value;
-            saveSettings.SaveGameSettings();
         }
         /// <summary>
         /// Cancel the audio setting changes
@@ -832,8 +828,6 @@ namespace GreatArcStudios
                 }
             }
             catch { Debug.Log("Please assign a terrain"); }
-            saveSettings.SaveGameSettings();
-
         }
         /// <summary>
         /// Video Options

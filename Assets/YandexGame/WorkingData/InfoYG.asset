@@ -217,7 +217,8 @@ MonoBehaviour:
     hi: 0
   fonts:
     defaultFont: []
-    ru: []
+    ru:
+    - {fileID: 12800000, guid: 0ca3c2c62c0f5e14e8b4c0186368564f, type: 3}
     en: []
     tr: []
     az: []

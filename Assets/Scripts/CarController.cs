@@ -7,7 +7,7 @@ public class car_controller : MonoBehaviour
     [SerializeField] private float torque = 1000;
     [SerializeField]  private float angle = 45;
 
-    void Update()
+    void FixedUpdate()
     {
         for (int i = 0; i < wheel_col.Length; i++)
         {
