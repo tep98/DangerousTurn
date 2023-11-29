@@ -20,7 +20,6 @@ public class Finish : MonoBehaviour
             Time.timeScale = 0.2f;
             deathCollider.SetActive(false);
             finishUI.SetActive(true);
-            YandexGame.FullscreenShow();
         }
     }
 }
