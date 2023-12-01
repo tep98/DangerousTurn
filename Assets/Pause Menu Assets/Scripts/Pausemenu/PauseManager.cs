@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.IO;
 using UnityEngine.SceneManagement;
+using YG;
 //using UnityStandardAssets.ImageEffects;
 /// <summary>
 ///  Copyright (c) 2016 Eric Zhu 
@@ -414,7 +415,8 @@ namespace GreatArcStudios
             readUseSimpleTerrain = useSimpleTerrain;
             useSimpleTerrain = readUseSimpleTerrain;
 
-            if (Input.GetKeyDown(KeyCode.Escape) && !mainPanel.activeInHierarchy)
+            
+            if (Input.GetKeyDown(KeyCode.Escape) && !mainPanel.activeInHierarchy && !YandexGame.nowAdsShow)
             {
 
                 uiEventSystem.SetSelectedGameObject(defualtSelectedMain);
@@ -433,7 +435,7 @@ namespace GreatArcStudios
                      blurEffect.enabled = true;
                  }  */
             }
-            else if(Input.GetKeyDown(KeyCode.Escape) && mainPanel.activeInHierarchy) {
+            else if(Input.GetKeyDown(KeyCode.Escape) && mainPanel.activeInHierarchy && !YandexGame.nowAdsShow) {
                 Time.timeScale = timeScale;
                 mainPanel.SetActive(false);
                 vidPanel.SetActive(false);

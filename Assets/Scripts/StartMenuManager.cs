@@ -158,7 +158,7 @@ namespace GreatArcStudios
         public void Update()
         {
 
-            if (Input.GetKeyDown(KeyCode.Escape) && !mainPanel.activeInHierarchy)
+            if (Input.GetKeyDown(KeyCode.Escape) && !mainPanel.activeInHierarchy && !YandexGame.nowAdsShow)
             {
 
                 uiEventSystem.SetSelectedGameObject(defualtSelectedMain);
